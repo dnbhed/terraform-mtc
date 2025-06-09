@@ -1,0 +1,30 @@
+resource "random_id" "random" {
+  byte_length = 2
+  count       = 2
+}
+
+resource "github_repository" "mtc-repo" {
+  name        = "mtc-repo-${random_id.random[count.index].dec}"
+  description = "Code for MTC"
+  visibility  = "private"
+  auto_init   = true
+  count       = 2
+}
+
+resource "github_repository_file" "readme" {
+  repository          = github_repository.mtc-repo[count.index].name
+  branch              = "main"
+  file                = "README.md"
+  content             = "# This repository is for infra devs"
+  overwrite_on_create = true
+  count               = 2
+}
+
+resource "github_repository_file" "index" {
+  repository          = github_repository.mtc-repo[count.index].name
+  branch              = "main"
+  file                = "index.html"
+  content             = "Hello Terraform!"
+  overwrite_on_create = true
+  count               = 2
+}
