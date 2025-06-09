@@ -1,6 +1,6 @@
 resource "random_id" "random" {
   byte_length = 2
-  count       = 2
+  count       = var.repo_count
 }
 
 resource "github_repository" "mtc-repo" {
@@ -8,7 +8,7 @@ resource "github_repository" "mtc-repo" {
   description = "Code for MTC"
   visibility  = "private"
   auto_init   = true
-  count       = 2
+  count       = var.repo_count
 }
 
 resource "github_repository_file" "readme" {
@@ -17,7 +17,7 @@ resource "github_repository_file" "readme" {
   file                = "README.md"
   content             = "# This repository is for infra devs"
   overwrite_on_create = true
-  count               = 2
+  count               = var.repo_count
 }
 
 resource "github_repository_file" "index" {
@@ -26,7 +26,7 @@ resource "github_repository_file" "index" {
   file                = "index.html"
   content             = "Hello Terraform!"
   overwrite_on_create = true
-  count               = 2
+  count               = var.repo_count
 }
 
 output "clone-urls" {
