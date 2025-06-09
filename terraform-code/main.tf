@@ -28,3 +28,7 @@ resource "github_repository_file" "index" {
   overwrite_on_create = true
   count               = 2
 }
+
+output "repo_names" {
+    value = github_repository.mtc-repo[*].name
+}
