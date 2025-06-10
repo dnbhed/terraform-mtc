@@ -34,6 +34,11 @@ resource "github_repository_file" "readme" {
   file                = "README.md"
   content             = "# This is a ${var.env} ${each.value.lang} repository is for ${each.key} devs"
   overwrite_on_create = true
+  lifecycle {
+    ignore_changes = [
+      content,
+    ]
+  }
 }
 
 resource "github_repository_file" "index" {
@@ -43,6 +48,11 @@ resource "github_repository_file" "index" {
   file                = each.value.filename
   content             = "Hello ${each.value.lang}!"
   overwrite_on_create = true
+  lifecycle {
+    ignore_changes = [
+      content,
+    ]
+  }
 }
 
 output "clone-urls" {
