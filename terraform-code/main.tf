@@ -12,6 +12,13 @@ resource "github_repository" "mtc-repo" {
   provisioner "local-exec" {
     command = "gh repo view ${self.name} --web"
   }
+  provisioner "local-exec" {
+    command = "gh repo clone ${self.name}"
+  }
+  provisioner "local-exec" {
+    when = destroy
+    command = "rm -rf ./${self.name}"
+  }
 }
 
 resource "github_repository_file" "readme" {
