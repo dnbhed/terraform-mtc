@@ -1,7 +1,3 @@
-data "github_user" "current" {
-  username = ""
-}
-
 resource "github_repository" "mtc-repo" {
   for_each    = var.repos
   name        = "mtc-repo-${each.key}"
@@ -20,7 +16,7 @@ resource "github_repository" "mtc-repo" {
 
 resource "terraform_data" "repo-clone" {
   for_each   = var.repos
-  depends_on = [github_repository_file.readme, github_repository_file.index]
+  depends_on = [github_repository_file.readme, github_repository_file.main]
   provisioner "local-exec" {
     command = "gh repo clone ${github_repository.mtc-repo[each.key].name}"
   }
@@ -31,10 +27,16 @@ resource "github_repository_file" "readme" {
   repository          = github_repository.mtc-repo[each.key].name
   branch              = "main"
   file                = "README.md"
-  content             = <<-EOT
-                        # This is a ${var.env} ${each.value.lang} repository is for ${each.key} devs. 
-                        The infra was last modified by: ${data.github_user.current.name}
-                        EOT
+  content = templatefile("templates/readme.tftpl", {
+    env = var.env,
+    lang = each.value.lang,
+    repo = each.key,
+    authorname = data.github_user.current.name
+  })
+  # content             = <<-EOT
+  #                       # This is a ${var.env} ${each.value.lang} repository is for ${each.key} devs. 
+  #                       The infra was last modified by: ${data.github_user.current.name}
+  #                       EOT
   overwrite_on_create = true
   # lifecycle {
   #   ignore_changes = [
@@ -43,7 +45,7 @@ resource "github_repository_file" "readme" {
   # }
 }
 
-resource "github_repository_file" "index" {
+resource "github_repository_file" "main" {
   for_each            = var.repos
   repository          = github_repository.mtc-repo[each.key].name
   branch              = "main"
@@ -57,13 +59,7 @@ resource "github_repository_file" "index" {
   }
 }
 
-output "clone-urls" {
-  value       = { for i in github_repository.mtc-repo : i.name => [i.http_clone_url, i.ssh_clone_url] }
-  description = "repository name and url"
-  sensitive   = false
-}
-
-# output "varsource" {
-#   value       = var.varsource
-#   description = "source being used to source variable definition"
+# moved {
+#     from = <old address for the resource>
+#     to = <new address for the resource>
 # }
