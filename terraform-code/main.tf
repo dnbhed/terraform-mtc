@@ -6,7 +6,7 @@ resource "random_id" "random" {
 resource "github_repository" "mtc-repo" {
   name        = "mtc-repo-${random_id.random[count.index].dec}"
   description = "Code for MTC"
-  visibility  = "private"
+  visibility  = var.env == "dev" ? "public" : "private"
   auto_init   = true
   count       = var.repo_count
 }
