@@ -4,6 +4,14 @@ resource "github_repository" "mtc-repo" {
   description = "${each.value.lang} Code for MTC"
   visibility  = var.env == "dev" ? "public" : "private"
   auto_init   = true
+
+  pages {
+    source {
+      branch = "main"
+      path   = "/"
+    }
+  }
+
   provisioner "local-exec" {
     command = "gh repo view ${self.name} --web"
   }
@@ -23,14 +31,14 @@ resource "terraform_data" "repo-clone" {
 }
 
 resource "github_repository_file" "readme" {
-  for_each            = var.repos
-  repository          = github_repository.mtc-repo[each.key].name
-  branch              = "main"
-  file                = "README.md"
+  for_each   = var.repos
+  repository = github_repository.mtc-repo[each.key].name
+  branch     = "main"
+  file       = "README.md"
   content = templatefile("templates/readme.tftpl", {
-    env = var.env,
-    lang = each.value.lang,
-    repo = each.key,
+    env        = var.env,
+    lang       = each.value.lang,
+    repo       = each.key,
     authorname = data.github_user.current.name
   })
   # content             = <<-EOT
