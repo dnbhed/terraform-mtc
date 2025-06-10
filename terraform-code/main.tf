@@ -9,6 +9,9 @@ resource "github_repository" "mtc-repo" {
   description = "${each.value} Code for MTC"
   visibility  = var.env == "dev" ? "public" : "private"
   auto_init   = true
+  provisioner "local-exec" {
+    command = "gh repo view ${self.name} --web"
+  }
 }
 
 resource "github_repository_file" "readme" {
