@@ -15,7 +15,7 @@ resource "github_repository_file" "readme" {
   repository          = github_repository.mtc-repo[count.index].name
   branch              = "main"
   file                = "README.md"
-  content             = "# This repository is for infra devs"
+  content             = "# This ${var.env} repository is for infra devs"
   overwrite_on_create = true
   count               = var.repo_count
 }
@@ -30,12 +30,12 @@ resource "github_repository_file" "index" {
 }
 
 output "clone-urls" {
-    value = { for i in github_repository.mtc-repo[*] : i.name => i.http_clone_url }
-    description = "repository name and url"
-    sensitive  = false
+  value       = { for i in github_repository.mtc-repo[*] : i.name => i.http_clone_url }
+  description = "repository name and url"
+  sensitive   = false
 }
 
 output "varsource" {
-    value = var.varsource
-    description = "source being used to source variable definition"
+  value       = var.varsource
+  description = "source being used to source variable definition"
 }
