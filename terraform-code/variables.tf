@@ -25,9 +25,8 @@ variable "env" {
 }
 
 variable "repos" {
-  type        = set(string)
+  type        = map(map(string))
   description = "repos to create"
-  default     = ["infra", "backend"]
 
   validation {
     condition     = length(var.repos) <= var.repo_max
