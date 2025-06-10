@@ -3,3 +3,8 @@ variable "repo_count" {
     description = "number of repos"
     default = 1
 }
+
+variable "varsource" {
+    type = string
+    # default = "variables.tf"
+}
