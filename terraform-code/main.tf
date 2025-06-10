@@ -1,7 +1,6 @@
-# resource "random_id" "random" {
-#   byte_length = 2
-#   count       = var.repo_count
-# }
+data "github_user" "current" {
+  username = ""
+}
 
 resource "github_repository" "mtc-repo" {
   for_each    = var.repos
@@ -32,13 +31,13 @@ resource "github_repository_file" "readme" {
   repository          = github_repository.mtc-repo[each.key].name
   branch              = "main"
   file                = "README.md"
-  content             = "# This is a ${var.env} ${each.value.lang} repository is for ${each.key} devs"
+  content             = "# This is a ${var.env} ${each.value.lang} repository is for ${each.key} devs. The infra was last modified by: ${data.github_user.current.name}"
   overwrite_on_create = true
-  lifecycle {
-    ignore_changes = [
-      content,
-    ]
-  }
+  # lifecycle {
+  #   ignore_changes = [
+  #     content,
+  #   ]
+  # }
 }
 
 resource "github_repository_file" "index" {
