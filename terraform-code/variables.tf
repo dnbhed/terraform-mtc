@@ -30,7 +30,7 @@ variable "repos" {
   default     = ["infra", "backend"]
 
   validation {
-    condition = length(var.repos) <= var.repo_max
+    condition     = length(var.repos) <= var.repo_max
     error_message = "don't do that"
   }
 }
