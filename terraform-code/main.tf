@@ -22,6 +22,12 @@ module "repos" {
   repos    = local.repos
 }
 
+module "deploy-key" {
+  for_each = local.repos
+  source = "./modules/deploy-key"
+  repo_name = each.key
+}
+
 output "repo-info" {
-    value = { for k,v in module.repos : k => v.clone-urls }
+  value = { for k, v in module.repos : k => v.clone-urls }
 }
